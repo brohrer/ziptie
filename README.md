@@ -4,7 +4,7 @@
 
 ![Level 5 Ziptie bundles from photos](/images/ziptie_level_5.png)
 
-This is a random subset of 3,000 features created from 11x11 pixel patches pulled from color images.
+This is a few of the features created from 11x11 pixel patches pulled from color images.
 Most of those pixels are gray, indicating that they aren't part
 of the feature. Around 20-25 of them are black, white, or color,
 showing the input pattern that maximizes the activation for that feature.
@@ -13,33 +13,64 @@ There are a variety of other shapes as well.
 There are triples of light, dark, light pixels showing line segments;
 curves; bright blobs; and other more intricate patterns.
 
-The method I'm using here is inspired by Hebbian "what fires together wires together" learning. It's something I've been refining over the last 10 years. It's an unsupervised clustering method for grouping channels (such as pixels in a camera) together to make features.
+The method here is inspired by Hebbian "what fires together wires together" learning.
+It's an unsupervised clustering method for grouping channels (such as pixels in a camera)
+together to make features.
+I call it Ziptie, because the notion of bundling cables together gives a strong
+intuitive head start to understanding how it works.
 
-I call it Ziptie, because the notion of bundling cables together gives a strong intuitive head start to understanding how it works.
-
-My favorite thing about Ziptie is that it is data agnostic. It created these edges and lines and blobs and curves without knowing that these were pixels, or knowing where they were located with respect to each other. The entire 3D image array was flattened before being passed in.
+My favorite thing about Ziptie is that it is data agnostic. It created these edges and lines
+and blobs and curves without knowing that these were pixels, or knowing where they were located
+with respect to each other. The entire 3D image array was flattened before being passed in.
 
 All of the structure in the features emerged organically, based on the patterns in the data.
+What I like about this is that, unlike Convolutional Neural Networks, it can learn features
+on any kind of data, even if it has no 2D or 3D structure.
 
-What I like about this is that, unlike ConvNets, it can learn features on any kind of data, even if it has no 2D or 3D structure.
+I designed it to work with the heterogeneous data of robots: imagery, yes, but also
+odometry, torque, range, audio, and myriad special purpose sensors.
 
-I designed it to work with the heterogeneous data of robots: imagery, yes, but also odometry, torque, range, audio, and myriad special purpose sensors.
 
-There is a non-standard funnel all the data has to pass through. It has to be converted to fuzzy categorical data. Every sensor needs to be converted to a collection channels whose values vary between zero and one.
+## How it works
 
-For pixels this is fairly natural. When scaled to [0, 1] a pixel value v is a fuzzy categorical variable representing the BRIGHT state. Because of the quirks of fuzzy categoricals, we also have to create a variable representing the DARK state of that pixel, 1 - v.
+### Fuzzy categorical data
 
-Once all the data has been transformed into a big collection of fuzzy categorical variables, it gets fed into a Ziptie. There, inputs that tend to be active at the same time get clustered together. The math behind this is essentially counting.
+There is a non-standard funnel all the data has to pass through
+before a Ziptie can start working with it.
+It has to be converted to fuzzy categorical data. Every sensor needs to be converted to
+a collection channels whose values vary between zero and one.
 
-The clustering in zip ties is agglomerative. To use the metaphor of cables carrying signals, each input is like a sec like a cable. The sequence of values edit takes is its signal. Sequential values can be related, as in time series data like audio or stock prices. Or they can be independent, as in image classification benchmarks.
+For pixels this is fairly natural. When scaled to [0, 1], a pixel's value *v*
+is a fuzzy categorical variable representing the BRIGHT state.
+Because of the quirks of fuzzy categoricals, we also have to create a variable
+representing the DARK state of that pixel, *1 - v*.
 
-The zip tie algorithm fines cables that tend to be co-active, that is, they tend to be positively valued at the same time. Note that this is different than correlation. Correlation is also strengthened when two signals are in active at the same time.
+### Bundling
 
-The coactivation between two cables for a set of inputs is the product of their to input values. Because all inputs come from fuzzy categorical variables, they are known to be between zero and one, and so the product and they need to inputs will also be between zero and one. If either of the two is in active and has a value of zero, then it’s cool activity with all others is zero.
+Once all the data has been transformed into a big collection
+of fuzzy categorical variables, it gets fed into a Ziptie.
+There inputs that tend to be active at the same time get
+clustered together. The math behind this is essentially counting.
+
+The clustering in zipties is agglomerative. To use the metaphor of cables carrying signals,
+each input is like a cable. The sequence of values it takes is its signal.
+Sequential values can be related, as in time series data like audio or stock prices.
+Or they can be independent, as in image classification benchmarks.
+
+The ziptie algorithm finds cables that tend to be co-active, that is,
+they tend to be positively valued at the same time.
+Note that this is different than correlation.
+Correlation is also strengthened when two signals are inactive at the same time.
+
+The coactivation between two cables for a set of inputs is the product
+of their two input values. Because all inputs come from fuzzy categorical variables,
+they are known to be between zero and one, and so the product of any two inputs
+will also be between zero and one. If a cable is inactive and has a value of zero,
+then its co-activity with all others is zero.
 
 To find patterns in CreativiTea, every channels cables cool activity with every other cable is calculated for each set of inputs, and they are summed overtime to find trends. Once the aggregated call activity between a pair of cables crosses the threshold, those two cables become bundled, As if bound together by a plastic zip tie. This process Continues, and every time a cable pair exceeds the call activity threshold for a bundle creation, a new bundle is created.
 
-Bundle activities
+### Bundle activities
 
 The output of a zip tie is the activity of each of its bundles. A bundles activity is calculated by taking the minimum value of the cables that contribute to it. Because of this, bundle activities are also constrained to be between zero and one. This makes them behave just like input cables. And in fact, after they are created, zip tie treats its bundles like additional input cables, and find their cool activity. With other cables. In this way bundles can grow. Two cables can become bundled and then one by one additional cables can be added creating a mini cable bundle of coactive cables.
 
@@ -49,7 +80,7 @@ After all bundle activities have been calculated, a cable’s remaining activity
 
 The number of bundles that a zip tie can create is set on initialization. This provides a backstop, ceiling to the resources that a zip tie will consume. It also simplifies implementation. However, it’s not a large leap to modify the zip tie so that it grows additional bundle capacity as necessary.
 
-Layers
+### Mutliple layers
 
 Because bundle activities are also valued between zero and one, the outputs of one zip tie can serve as the inputs to another. The bundles created in one zip tie can serve as the cables, the inputs to the next.
 
