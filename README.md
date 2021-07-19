@@ -62,17 +62,24 @@ they tend to be positively valued at the same time.
 Note that this is different than correlation.
 Correlation is also strengthened when two signals are inactive at the same time.
 
-The coactivation between two cables for a set of inputs is the product
+The co-activation between two cables for a set of inputs is the product
 of their two input values. Because all inputs come from fuzzy categorical variables,
 they are known to be between zero and one, and so the product of any two inputs
 will also be between zero and one. If a cable is inactive and has a value of zero,
 then its co-activity with all others is zero.
 
-To find patterns in CreativiTea, every channels cables cool activity with every other cable is calculated for each set of inputs, and they are summed overtime to find trends. Once the aggregated call activity between a pair of cables crosses the threshold, those two cables become bundled, As if bound together by a plastic zip tie. This process Continues, and every time a cable pair exceeds the call activity threshold for a bundle creation, a new bundle is created.
+Every channel's co-activity with every other cable is calculated for each set of inputs,
+and they are summed over time to find trends.
+Once the aggregated co-activity between a pair of cables crosses a threshold,
+those two cables become bundled, as if bound together by a plastic zip tie.
+This process continues, and every time a cable pair exceeds the co-activity
+threshold for a bundle creation, a new bundle is created.
 
 ### Bundle activities
 
-The output of a zip tie is the activity of each of its bundles. A bundles activity is calculated by taking the minimum value of the cables that contribute to it. Because of this, bundle activities are also constrained to be between zero and one. This makes them behave just like input cables. And in fact, after they are created, zip tie treats its bundles like additional input cables, and find their cool activity. With other cables. In this way bundles can grow. Two cables can become bundled and then one by one additional cables can be added creating a mini cable bundle of coactive cables.
+The output of a ziptie is the activity of each of its bundles.
+A bundle's activity is calculated by taking the minimum value of the cables
+that contribute to it. Because of this, bundle activities are also constrained to be between zero and one. This makes them behave just like input cables. And in fact, after they are created, zip tie treats its bundles like additional input cables, and find their cool activity. With other cables. In this way bundles can grow. Two cables can become bundled and then one by one additional cables can be added creating a mini cable bundle of coactive cables.
 
 The other quirk of calculating bundle activities is that after the minimum value of a bundles cables is found and assigned to the bundle activity, that value is subtracted from that  m of each of the cables. In this way, a cables value is a finite quantity that it can only contribute once. After it is contributed to a bundle, its activity is reduced by that amount. Because of this, the order in which bundle activities are calculated is important. The most recently created bundles activities are created first. These will be the ones with the greatest number of cables. They will be the most complex and if active, account for the most activity with a single value.
 
