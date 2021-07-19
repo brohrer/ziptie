@@ -108,7 +108,7 @@ and avoids pathological cases where similar features get created repeatedly.
 Zipties continue to grow new bundles indefinitely. If desired, you can set up an external
 check and stop creating new bundles once you have as many as you want.
 
-### Mutliple layers
+### Multiple layers
 
 Because bundle activities are also valued between zero and one, the outputs
 of one zipie can serve as the inputs to another. The bundles created
