@@ -171,14 +171,6 @@ class Ziptie(object):
             self.mapping[i_cable_a, i_bundle] = 1
             self.mapping[i_cable_b, i_bundle] = 1
 
-            # if len(self.bundle_to_cable_mapping) > i_bundle:
-            # self.bundle_to_cable_mapping[i_bundle] =[i_cable_a, i_cable_b]
-            # else:
-            #     self.bundle_to_cable_mapping.append(
-            #         [i_cable_a, i_cable_b])
-            # self.cable_to_bundle_mapping[i_cable_a].append(i_bundle)
-            # self.cable_to_bundle_mapping[i_cable_b].append(i_bundle)
-
             # Reset the accumulated nucleation and agglomeration energy
             # for the two cables involved.
             self.nucleation_energy[i_cable_a, :] = 0
@@ -225,14 +217,8 @@ class Ziptie(object):
 
             # Make a copy of the growing bundle.
             self.mapping[:, i_new_bundle] = self.mapping[:, i_bundle]
-            # self.bundle_to_cable_mapping.append(
-            #     self.bundle_to_cable_mapping[i_bundle])
             # Add in the new cable.
-            # self.bundle_to_cable_mapping[i_new_bundle].append(i_cable)
             self.mapping[i_cable, i_bundle] = 1
-            # Update the contributing cables.
-            # for i_cable in self.bundle_to_cable_mapping[i_new_bundle]:
-            #      self.cable_to_bundle_mapping[i_cable].append(i_new_bundle)
 
             # Reset the accumulated nucleation and agglomeration energy
             # for the two cables involved.
@@ -277,8 +263,6 @@ class Ziptie(object):
                 upstream_resets.append(i_bundle)
                 # Remove the bundle from the mappings in both directions.
                 self.mapping[:, i_bundle] = 0
-                #    self.cable_to_bundle_mapping[j_cable].remove(i_bundle)
-                # self.bundle_to_cable_mapping[i_bundle] = []
 
                 self.agglomeration_mask[i_bundle, :] = 1
                 self.agglomeration_energy[i_bundle, :] = 0
@@ -478,12 +462,12 @@ def agglomeration_energy_gather(
     agglomeration_mask,
 ):
     """
-    Accumulate the energy binding a new feature to an existing bundle..
+    Accumulate the energy binding a new feature to an existing bundle.
 
     This formulation takes advantage of loops and the sparsity of the data.
     The original arithmetic looks like
         coactivities = bundle_activities * cable_activities.T
-        agglomeration_energy += coactivities * agglomeration_energy_rate
+        agglomeration_energy += coactivities
 
     Parameters
     ----------
