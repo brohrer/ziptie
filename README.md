@@ -33,6 +33,9 @@ odometry, torque, range, audio, and myriad special purpose sensors.
 
 ## How it works
 
+For the authoritative source, I've [liberally commented the code](https://gitlab.com/brohrer/ziptie/-/blob/main/ziptie/algo.py).
+Here's a summary of the high points.
+
 ### Fuzzy categorical data
 
 There is a non-standard funnel all the data has to pass through
