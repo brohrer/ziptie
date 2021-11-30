@@ -33,6 +33,9 @@ odometry, torque, range, audio, and myriad special purpose sensors.
 
 ## How it works
 
+For the authoritative source, I've [liberally commented the code](https://gitlab.com/brohrer/ziptie/-/blob/main/ziptie/algo.py).
+Here's a summary of the high points.
+
 ### Fuzzy categorical data
 
 There is a non-standard funnel all the data has to pass through
@@ -62,7 +65,7 @@ they tend to be positively valued at the same time.
 Note that this is different than correlation.
 Correlation is also strengthened when two signals are inactive at the same time.
 
-The coactivation between two cables for a set of inputs is the product
+The co-activation between two cables for a set of inputs is the product
 of their two input values. Because all inputs come from fuzzy categorical variables,
 they are known to be between zero and one, and so the product of any two inputs
 will also be between zero and one. If a cable is inactive and has a value of zero,
@@ -86,18 +89,40 @@ occur often are represented by a single byte.
 
 ### Bundle activities
 
-The output of a zip tie is the activity of each of its bundles. A bundles activity is calculated by taking the minimum value of the cables that contribute to it. Because of this, bundle activities are also constrained to be between zero and one. This makes them behave just like input cables. And in fact, after they are created, zip tie treats its bundles like additional input cables, and find their cool activity. With other cables. In this way bundles can grow. Two cables can become bundled and then one by one additional cables can be added creating a mini cable bundle of coactive cables.
+The output of a ziptie is the activity of each of its bundles.
+A bundle's activity is calculated by taking the minimum value of the cables
+that contribute to it. Because of this, bundle activities are also constrained
+to be between zero and one. This makes them behave just like input cables.
+And in fact, after they are created, a ziptie treats its bundles like additional
+input cables, and find their co-activity with other cables.
+In this way bundles can grow. Two cables can become bundled and then one by one
+additional cables can be added creating a many-cable bundle of coactive cables.
 
-The other quirk of calculating bundle activities is that after the minimum value of a bundles cables is found and assigned to the bundle activity, that value is subtracted from that  m of each of the cables. In this way, a cables value is a finite quantity that it can only contribute once. After it is contributed to a bundle, its activity is reduced by that amount. Because of this, the order in which bundle activities are calculated is important. The most recently created bundles activities are created first. These will be the ones with the greatest number of cables. They will be the most complex and if active, account for the most activity with a single value.
+The other quirk of calculating bundle activities is that after
+the minimum value of a bundles cables is found and assigned
+to the bundle activity, that value is subtracted from that 
+of each of the cables. In this way, a cable's value is a finite
+quantity that can only contribute once to a bundle's activity.
+After it has contributed to a bundle, its activity is reduced by that amount.
+Because of this, the order in which bundle activities are calculated
+is important. The most recently created bundles' activities are calculated first.
+These will be the bundles with the greatest number of cables.
+They will be the most complex and if active, account for the most activity with a single value.
 
-After all bundle activities have been calculated, a cable’s remaining activity is available for contributing to call activity calculations. This prevents activity from getting counted multiple times and avoids pathological cases where similar features get created repeatedly.
+After all bundle activities have been calculated, a cable’s remaining
+activity is available for contributing to co-activity calculations.
+This prevents activity from getting counted multiple times
+and avoids pathological cases where similar features get created repeatedly.
 
-The number of bundles that a zip tie can create is set on initialization. This provides a backstop, ceiling to the resources that a zip tie will consume. It also simplifies implementation. However, it’s not a large leap to modify the zip tie so that it grows additional bundle capacity as necessary.
+Zipties continue to grow new bundles indefinitely. If desired, you can set up an external
+check and stop creating new bundles once you have as many as you want.
 
-### Mutliple layers
+### Multiple layers
 
-Because bundle activities are also valued between zero and one, the outputs of one zip tie can serve as the inputs to another. The bundles created in one zip tie can serve as the cables, the inputs to the next.
+Because bundle activities are also valued between zero and one, the outputs
+of one zipie can serve as the inputs to another. The bundles created
+in one ziptie can serve as the cables, the inputs, to the next.
 
-This allows for hierarchical clustering. Low level cables can be bound into bundles in the first zip ties, and these can then be bound into yet more complex bundles in the next. This process can be repeated as many times as you like.
-
-
+This allows for hierarchical clustering. Low level cables can be bound into bundles
+in the first zipties, and these can then be bound into yet more
+complex bundles in the next. This process can be repeated as many times as you like.
