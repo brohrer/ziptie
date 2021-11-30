@@ -68,7 +68,21 @@ they are known to be between zero and one, and so the product of any two inputs
 will also be between zero and one. If a cable is inactive and has a value of zero,
 then its co-activity with all others is zero.
 
-To find patterns in CreativiTea, every channels cables cool activity with every other cable is calculated for each set of inputs, and they are summed overtime to find trends. Once the aggregated call activity between a pair of cables crosses the threshold, those two cables become bundled, As if bound together by a plastic zip tie. This process Continues, and every time a cable pair exceeds the call activity threshold for a bundle creation, a new bundle is created.
+To find patterns in activity, every channel's cables co-activity with every
+other cable is calculated for each set of inputs, and they are summed over
+time to find trends. Once the aggregated co-activity between a pair of
+cables crosses the threshold, those two cables become bundled,
+as if bound together by a plastic zip tie. This process continues,
+and every time a cable pair exceeds the co-activity threshold for 
+bundle creation, a new bundle is created.
+
+The bundling process is conceptually similar to
+[byte pair encoding](https://en.wikipedia.org/wiki/Byte_pair_encoding),
+where frequently co-occurring characters get represented
+and replaced by a unique code
+of their own. The process is repeated until even long strings that
+occur often are represented by a single byte.
+
 
 ### Bundle activities
 
@@ -85,3 +99,5 @@ The number of bundles that a zip tie can create is set on initialization. This p
 Because bundle activities are also valued between zero and one, the outputs of one zip tie can serve as the inputs to another. The bundles created in one zip tie can serve as the cables, the inputs to the next.
 
 This allows for hierarchical clustering. Low level cables can be bound into bundles in the first zip ties, and these can then be bound into yet more complex bundles in the next. This process can be repeated as many times as you like.
+
+
