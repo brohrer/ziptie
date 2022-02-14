@@ -3,7 +3,7 @@ from numba import njit
 import numpy as np
 
 
-class Ziptie(object):
+class Ziptie:
     """
     An incremental unsupervised clustering algorithm.
 
@@ -65,6 +65,9 @@ class Ziptie(object):
         self.activity_threshold = .01
         # cable_activities : array of floats
         #     The current set of input actvities.
+        self.cable_activities = np.zeros(self.n_cables)
+        # remaining_cable_activities : array of floats
+        #     The set of input actvities not associated with any bundle.
         self.cable_activities = np.zeros(self.n_cables)
         # bundle_activities : array of floats
         #     The current set of bundle activities.
@@ -143,8 +146,10 @@ class Ziptie(object):
         """
         self.cable_activities = new_cable_activities
         self.bundle_activities = np.zeros(self.n_bundles)
+        self.remaining_cable_activities = self.cable_activities.copy()
         update_bundles_numba(
             self.cable_activities,
+            self.remaining_cable_activities,
             self.bundle_activities,
             self.activity_threshold,
             self.n_bundles,
@@ -396,6 +401,7 @@ def max_2d(array2d):
 @njit
 def update_bundles_numba(
     cable_activities,
+    remaining_cable_activities,
     bundle_activities,
     activity_threshold,
     n_bundles,
@@ -405,7 +411,6 @@ def update_bundles_numba(
     # to the oldest.
     i_bundles = np.sort(np.unique(np.where(mapping)[1]))[::-1]
 
-    remaining_cable_activities = cable_activities.copy()
     for i_bundle in i_bundles:
         i_cables = np.where(mapping[:, i_bundle])[0]
         bundle_activity = np.min(remaining_cable_activities[i_cables])
