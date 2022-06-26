@@ -40,7 +40,8 @@ Here's a summary of the high points.
 
 There is a non-standard funnel all the data has to pass through
 before a Ziptie can start working with it.
-It has to be converted to fuzzy categorical data. Every sensor needs to be converted to
+It has to be converted to [fuzzy categorical data](https://e2eml.school/fuzzy_categoricals).
+Every sensor needs to be converted to
 a collection channels whose values vary between zero and one.
 
 For pixels this is fairly natural. When scaled to [0, 1], a pixel's value *v*
