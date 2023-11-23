@@ -36,13 +36,13 @@ odometry, torque, range, audio, and myriad special purpose sensors.
 For the authoritative source, I've [liberally commented the code](https://gitlab.com/brohrer/ziptie/-/blob/main/ziptie/algo.py).
 Here's a summary of the high points.
 
-### Fuzzy categorical data
+### Fuzzy data
 
 There is a non-standard funnel all the data has to pass through
 before a Ziptie can start working with it.
-It has to be converted to [fuzzy categorical data](https://e2eml.school/fuzzy_categoricals).
+It has to be converted to fuzzy variables.
 Every sensor needs to be converted to
-a collection channels whose values vary between zero and one.
+a collection categories whose values vary between zero and one.
 
 For pixels this is fairly natural. When scaled to [0, 1], a pixel's value *v*
 is a fuzzy categorical variable representing the BRIGHT state.
