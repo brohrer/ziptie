@@ -46,3 +46,28 @@ bundle_activities = zt.update_bundles(inputs)
 ```python
 zt.n_bundles >= bundle_limit
 ```
+
+## Example
+
+Putting it all together in a bare-bones example (also in example.py).
+
+```python
+import numpy as np
+from ziptie.algo import Ziptie
+
+n_inputs = 10
+bundle_limit = 10
+zt = Ziptie(n_inputs)
+
+done = False
+while not done:
+    inputs = np.random.sample(n_inputs)
+    zt.create_new_bundles()
+    zt.grow_bundles()
+    bundle_activities = zt.update_bundles(inputs)
+
+    if zt.n_bundles >= bundle_limit:
+        done = True
+
+print("Done!")
+```
