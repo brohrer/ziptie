@@ -49,7 +49,8 @@ zt.n_bundles >= bundle_limit
 
 ## Example
 
-Putting it all together in a bare-bones example (also in example.py).
+Putting it all together in a bare-bones example
+(also in [example.py](example.py)).
 
 ```python
 import numpy as np
