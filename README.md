@@ -28,7 +28,7 @@ from ziptie.algo import Ziptie
 
 ### Initialize
 ```python
-zt = ZiptieAlgo(n_inputs)
+zt = Ziptie(n_inputs)
 ```
 
 ### Update clusters on each iteration
