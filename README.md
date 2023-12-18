@@ -111,10 +111,46 @@ the run times.
 There are a handful of constants and hyperparameters that allow
 you to trade speed for accuracy and to adjust Ziptie's behaviors.
 
+From the code:
+```python
+def __init__(
+        self,
+        n_cables=16,
+        name='ziptie',
+        activity_deadzone=.01,
+        threshold=1e3,
+        growth_threshold=None,
+        growth_check_frequency=None,
+        nucleation_check_frequency=None,
+):
+```
 
-activity_deadzone=.01,
-threshold=1e3,
-growth_threshold=None,
-growth_check_frequency=None,
-nucleation_check_frequency=None,
+**`n_cables`** (int) has already been introduced. It is the number of cable
+inputs the Ziptie expects.
 
+**`activity_deadzone`** (float, default of .01) is the threshold
+below which any cable or bundle activity will be snapped down to zero.
+This helps maintain sparsity without otherwise changing the behavior much.
+
+**`threshold`** (float, default of 1e3) is the agglomeration energy
+threshold for creating a new bundle from two cables. Increasing this
+means that bundles will form more slowly, but the are more likely to
+capture the underlying relationships between cables.
+
+**`growth_threshold`** (float, default of `None`) is the optional
+argument for setting the cable-bundle agglomeration threshold separately.
+If `None` it will use whatever value was supplied as the `threshold`.
+Having different thresholds for cable-cable and cable-bundle agglomeration
+can change whether the Ziptie tends to create more small bundles or fewer
+larger ones.
+
+**`nucleation_check_frequency`** (float, default of `None`) is roughly
+how many time steps will pass between checking whether there is a pair
+of cables that has accumulated enough agglomeration energy to become
+a new bundle. This check is expensive so performing it less often is a
+good way to speed up the Ziptie. If `None` is supplied, this defaults
+to the agglomeration threshold / 10.
+
+**`growth_check_frequency`** (float, default of `None`) is
+similar to the `nucleation_check_frequency`, but for agglomeration of
+cable-bundle bundles.
