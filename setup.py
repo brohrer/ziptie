@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 st.setup(
     name='ziptie',
     version='1',
-    description='An unsupervised',
+    description='An unsupervised feature learner',
     url='https://gitlab.com/brohrer/ziptie',
     download_url='https://gitlab.com/brohrer/ziptie/tags/',
     author='Brandon Rohrer',

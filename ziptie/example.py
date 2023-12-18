@@ -13,9 +13,11 @@ while not done:
 
     inputs = np.random.sample(n_inputs)
 
-    zt.create_new_bundles()
-    zt.grow_bundles()
-    bundle_activities = zt.update_bundles(inputs)
+    ##  step() is a convenience function that runs these three lines
+    # zt.create_new_bundles()
+    # zt.grow_bundles()
+    # bundle_activities = zt.update_bundles(inputs)
+    bundle_activities = zt.step(inputs)
 
     if zt.n_bundles >= bundle_limit:
         done = True
