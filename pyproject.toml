@@ -1,6 +1,6 @@
 [project]
 name = "ziptie"
-version = "1.1.1"
+version = "1.1.4"
 description='An unsupervised feature learner'
 readme = "README.md"
 authors = [
@@ -26,25 +26,22 @@ Repository = "https://codeberg.org/brohrer/ziptie.git"
 GitHub = "https://github.com/brohrer/ziptie.git"
 GitLab = "https://gitlab.com/brohrer/ziptie.git"
 
-[project.scripts]
-ziptie = "ziptie:benchmark"
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-Repository = "https://codeberg.org/brohrer/ziptie.git"
+# Repository = "https://codeberg.org/brohrer/ziptie.git"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/ziptie"]
+# [tool.hatch.build.targets.wheel]
+# packages = ["src/ziptie"]
 
-[tool.hatch.build.targets.sdist]
-sources = ["src/ziptie"]
-include = [
-  "*.md",
-]
-exclude = [
-  "archive"
-]
+# [tool.hatch.build.targets.sdist]
+# sources = ["/", "src/ziptie"]
+# include = [
+#   "*.md",
+# ]
+# exclude = [
+#   "archive"
+# ]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
