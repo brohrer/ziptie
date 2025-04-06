@@ -1,6 +1,6 @@
 [project]
 name = "ziptie"
-version = "1.1.0"
+version = "1.1.1"
 description='An unsupervised feature learner'
 readme = "README.md"
 authors = [

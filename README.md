@@ -5,18 +5,14 @@ of how Ziptie works and why it was created.
 
 ## Installation
 
-First download the code.
-In a terminal with a bash-like scripting language this can be done with
-
 ```bash
-git clone https://codeberg.org/brohrer/ziptie.git
+uv add ziptie
 ```
 
-Then Python's package manager pip is a good way to get it into your
-environment.
+or
 
 ```bash
-python3 -m pip install -e ziptie
+pip install ziptie
 ```
 
 ## Usage
@@ -99,8 +95,8 @@ of input cables to see how long it takes to run, and to see how those
 per-iteration run times grow as the number of bundles increases.
 
 ```bash
-python3 benchmark.py
-python3 benchmark_plot.py
+uv run src/ziptie/benchmark.py
+uv run src/ziptie/benchmark_plot.py
 ```
 
 Don't be afraid to make changes to `benchmark.py` and see how it affects
