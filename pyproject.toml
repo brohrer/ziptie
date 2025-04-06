@@ -1,0 +1,105 @@
+[project]
+name = "ziptie"
+version = "1.1.0"
+description='An unsupervised feature learner'
+readme = "README.md"
+authors = [
+  { name="Brandon Rohrer", email="brohrer@fastmail.com" },
+]
+requires-python = ">=3.9"
+dependencies = [
+    "matplotlib>=3.9.4",
+    "numba>=0.60.0",
+    "numpy>=2.0.2",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+]
+
+[project.urls]
+Homepage = "https://codeberg.org/brohrer/ziptie"
+Documentation = "https://codeberg.org/brohrer/ziptie-paper/src/branch/main/ziptie.pdf"
+Repository = "https://codeberg.org/brohrer/ziptie.git"
+GitHub = "https://github.com/brohrer/ziptie.git"
+GitLab = "https://gitlab.com/brohrer/ziptie.git"
+
+[project.scripts]
+ziptie = "ziptie:benchmark"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+Repository = "https://codeberg.org/brohrer/ziptie.git"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ziptie"]
+
+[tool.hatch.build.targets.sdist]
+sources = ["src/ziptie"]
+include = [
+  "*.md",
+]
+exclude = [
+  "archive"
+]
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.4",
+]
