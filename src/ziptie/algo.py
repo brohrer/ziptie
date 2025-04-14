@@ -202,7 +202,7 @@ class Ziptie:
             i_bundle = self.n_bundles
             self.increment_n_bundles()
             self.n_cables_by_bundle[i_bundle] = 2
-            self.mapping[i_bundle, :2] = np.array([i_cable_a, i_cable_b])
+            self.mapping[i_bundle, :2] = np.array([i_cable_a, i_cable_b], dtype=int)
 
             # Reset the accumulated nucleation and agglomeration energy
             # for the two cables involved.
@@ -381,7 +381,7 @@ class Ziptie:
         if n_max_cables_by_bundle >= cable_capacity:
             new_cable_capacity = cable_capacity * 2
 
-            new_mapping = -np.ones((bundle_capacity, new_cable_capacity))
+            new_mapping = -np.ones((bundle_capacity, new_cable_capacity), dtype=int)
             new_mapping[:, :cable_capacity] = self.mapping
             self.mapping = new_mapping
 
