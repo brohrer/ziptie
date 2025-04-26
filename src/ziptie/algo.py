@@ -1,6 +1,13 @@
 from numba import njit
 import numpy as np
 
+# TODO:
+#    take in max bundle capacity as an initialization argument 
+#    pre-allocate mapping and agglomeration energy
+#    remove array growth checks and code
+#    ...
+#    add logging. Save to npy? sqlogger?
+
 
 class Ziptie:
     """
@@ -35,6 +42,8 @@ class Ziptie:
         growth_threshold=None,
         growth_check_frequency=None,
         nucleation_check_frequency=None,
+        debug=True,
+        debug_fraction=.001,
     ):
         """
         Initialize the ziptie, pre-allocating data structures.
@@ -53,6 +62,9 @@ class Ziptie:
             to agglomerate a cable to an existing one.
         """
         self.name = name
+        self.debug = debug
+        self.debug_fraction = debug_fraction
+
         self.n_cables = n_cables
         # n_bundles : int, optional
         #     The number of bundle outputs from the Ziptie.
@@ -174,6 +186,11 @@ class Ziptie:
             self.mapping,
             self.n_cables_by_bundle,
         )
+
+
+        if self.debug and np.random.sample() < self.debug_fraction:
+            self.info()
+
         return self.bundle_activities
 
     def create_new_bundles(self):
@@ -226,6 +243,11 @@ class Ziptie:
             blocked_b = np.where(self.nucleation_mask[i_cable_b, :] == 0)[0]
             blocked = np.union1d(blocked_a, blocked_b)
             self.agglomeration_mask[i_bundle, blocked] = 0
+
+            if self.debug:
+                print()
+                print(f"    new bundle  with cables {i_cable_a} and {i_cable_b}")
+                self.info()
 
     def grow_bundles(self):
         """
@@ -306,6 +328,11 @@ class Ziptie:
             blocked_bundle = np.where(self.agglomeration_mask[i_bundle, :] == 0)
             blocked = np.union1d(blocked_cable[0], blocked_bundle[0])
             self.agglomeration_mask[i_new_bundle, blocked] = 0
+
+            if self.debug:
+                print()
+                print(f"    new bundle with cable {i_cable} and bundle {i_bundle}")
+                self.info()
 
     def update_inputs(self, resets):
         """
@@ -445,6 +472,17 @@ class Ziptie:
                     cable_activities[i_cable], bundle_activities[i_bundle]
                 )
         return cable_activities
+
+    def info(self):
+        # nuc_nonzero = np.where(self.nucleation_energy > 0)[0].size
+        # agg_nonzero = np.where(self.agglomeration_energy > 0)[0].size
+        print()
+        print("Ziptie")
+        print(f"    {self.n_cables} cables")
+        print(f"    {self.n_bundles} bundles")
+        # print(f"    {nuc_nonzero} non-zero nucleation values")
+         #print(f"    {agg_nonzero} non-zero agglomeration values")
+        print()
 
 
 @njit
