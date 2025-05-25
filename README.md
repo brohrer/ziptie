@@ -45,9 +45,9 @@ There is a convenience function that takes care of `create_new_bundles`,
 bundle_activities = zt.step(inputs)
 ```
 
-### Impose a stopping condition
+### Choose the number of bundles
 ```python
-zt.n_bundles >= bundle_limit
+zt = Ziptie(n_inputs, n_bundles_max)
 ```
 
 ## Example
@@ -61,7 +61,7 @@ from ziptie.algo import Ziptie
 
 n_inputs = 10
 bundle_limit = 10
-zt = Ziptie(n_inputs)
+zt = Ziptie(n_inputs, bundle_limit)
 
 done = False
 while not done:
@@ -88,6 +88,14 @@ To get a picture of a single feature, you can construct a
 sparse `bundle_activities` array, with only a single non-zero element
 for the feature you want to investigate.
 
+
+## Testing
+
+There are few basic tests that you can run with
+```bash
+uv run pytest
+```
+
 ## Benchmark
 
 It's informative to run Ziptie on your own system with different numbers
@@ -112,6 +120,7 @@ From the code:
 def __init__(
         self,
         n_cables=16,
+        n_bundles_max=64,
         name='ziptie',
         activity_deadzone=.01,
         threshold=1e3,
@@ -123,6 +132,11 @@ def __init__(
 
 **`n_cables`** (int) has already been introduced. It is the number of cable
 inputs the Ziptie expects.
+
+**`n_bundles_max`** (int) has already been introduced. It is the number of
+bundles the Ziptie is allowed to create. Anecdotally, when
+`n_cables` x `n_bundles_max` = 10^9, it requires 16GB of memory and one
+iteration takes 21 ms.
 
 **`activity_deadzone`** (float, default of .01) is the threshold
 below which any cable or bundle activity will be snapped down to zero.

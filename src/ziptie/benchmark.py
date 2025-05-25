@@ -14,7 +14,7 @@ from ziptie.algo import Ziptie
 n_loops = 1
 
 # How may time steps to walk through per loop.
-max_iters = 1e6
+max_iters = 1e4
 
 # Total number of cables feeding into the Ziptie.
 n_cables = 10000
@@ -23,11 +23,13 @@ n_cables = 10000
 # Fully dense would be n_active_cables = n_cables
 n_active_cables = int(n_cables / 20)
 
+n_bundles_max = n_cables * 10
+
 iter_times = []
 iter_data = []
 
 for i_pass in range(n_loops):
-    zt = Ziptie(n_cables)
+    zt = Ziptie(n_cables, n_bundles_max)
 
     # "Warm up" the Ziptie.
     # Run through it once to trigger all the just-in-time compiling.
@@ -55,11 +57,11 @@ for i_pass in range(n_loops):
     us_per_iter = int(1e6 * total_time / max_iters)
     iter_times.append(us_per_iter)
 
-    print(f"Pass {i_pass}, {zt.n_bundles} bundles, {us_per_iter}us per iter")
+    # print(f"Pass {i_pass}, {zt.n_bundles} bundles, {us_per_iter}us per iter")
 
 print(f"{int(np.mean(np.array(iter_times)))} usec per iteration")
 print(f"{int(np.std(np.array(iter_times)))} usec standard deviation")
-print(f"{int(np.std(np.array(iter_times)) / n_loops)} usec standard error")
+print(f"{int(np.std(np.array(iter_times)) / n_loops**0.5)} usec standard error")
 
 # Save the observed iteration times out for visualization and analysis.
 np.save("bench_data.npy", np.array(iter_data))
